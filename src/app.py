@@ -34,7 +34,16 @@ class AgentRequest(BaseModel):
 
 @app.on_event("startup")
 async def startup():
-    await init_db()
+    try:
+        print("Initializing database...")
+        await init_db()
+        print("Database initialization completed successfully")
+    except Exception as e:
+        print(f"ERROR initializing database: {str(e)}")
+        # Don't fail the entire application startup if DB init fails
+        # This will allow the app to start even with DB issues
+        # The endpoints that need DB will return appropriate errors
+        print("WARNING: Starting application without database initialization")
 
 @app.post("/agent/run")
 async def run_agent(

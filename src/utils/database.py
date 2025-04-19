@@ -1,14 +1,32 @@
 import aiosqlite
 import json
+import os
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent.parent / "db" / "database.db"
+# Use /tmp directory on Render or other cloud platforms
+# This is a common writable location on cloud platforms
+if os.environ.get('RENDER') == 'true':
+    DB_PATH = Path('/tmp/database.db')
+else:
+    # Original path for local development
+    DB_PATH = Path(__file__).parent.parent / "db" / "database.db"
+
+# Ensure the parent directory exists
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 async def init_db():
-    async with aiosqlite.connect(DB_PATH) as db:
-        with open(Path(__file__).parent.parent / "models" / "schema.sql") as f:
-            await db.executescript(f.read())
-        await db.commit()
+    print(f"Initializing database at: {DB_PATH}")
+    try:
+        async with aiosqlite.connect(DB_PATH) as db:
+            schema_path = Path(__file__).parent.parent / "models" / "schema.sql"
+            print(f"Loading schema from: {schema_path}")
+            with open(schema_path) as f:
+                await db.executescript(f.read())
+            await db.commit()
+            print("Database initialized successfully")
+    except Exception as e:
+        print(f"Error initializing database: {str(e)}")
+        raise
 
 async def get_db():
     db = await aiosqlite.connect(DB_PATH)

@@ -14,15 +14,15 @@ async def analyze_intent(user_input: str) -> str:
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """You are an expert system analyst. Extract the app name and use case summary from the user's request.
-                    Format your response as JSON with 'app_name' and 'use_case_summary' keys.
+        messages=[
+            {
+                "role": "system",
+                "content": """You are an expert system analyst. Extract the app name and use case summary from the user's request.
+                Format your response as JSON with 'app_name' and 'use_case_summary' keys.
                     The app name should be short, clean, and title-cased.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {"role": "user", "content": user_input}
+            },
+            {"role": "user", "content": user_input}
             ]
         )
         
@@ -52,16 +52,16 @@ async def generate_use_cases(use_case_summary: str) -> str:
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """Generate entities and pages for the application based on the use case summary.
-                    Each entity should have fields with types (string, number, boolean, select, date).
-                    Each page should have a title, path, icon, and purpose.
+        messages=[
+            {
+                "role": "system",
+                "content": """Generate entities and pages for the application based on the use case summary.
+                Each entity should have fields with types (string, number, boolean, select, date).
+                Each page should have a title, path, icon, and purpose.
                     Format as JSON with 'entities' and 'pages' arrays.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {"role": "user", "content": use_case_summary}
+            },
+            {"role": "user", "content": use_case_summary}
             ]
         )
         
@@ -134,9 +134,9 @@ async def generate_page_configs(entities: List[Dict[str, Any]], pages: List[Dict
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
+        messages=[
+            {
+                "role": "system",
                     "content": """Create a detailed UI configuration with pages, zones, and components based on the provided entities and pages.
                     
                     For each page, create at least two zones (e.g., header, main, sidebar, footer).
@@ -159,11 +159,11 @@ async def generate_page_configs(entities: List[Dict[str, Any]], pages: List[Dict
                     Format as JSON with a 'pages' object, with each page ID as a key containing the full page configuration.
                     
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {
-                    "role": "user", 
-                    "content": f"Entities: {entities}\nPages: {pages}"
-                }
+            },
+            {
+                "role": "user", 
+                "content": f"Entities: {entities}\nPages: {pages}"
+            }
             ]
         )
         
@@ -309,17 +309,17 @@ async def generate_mock_data(entities: List[Dict[str, Any]]) -> str:
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """Generate realistic mock data for each entity.
-                    Create 5-10 records per entity.
-                    Ensure foreign keys match between related entities.
-                    Use realistic values for dates and enums.
+        messages=[
+            {
+                "role": "system",
+                "content": """Generate realistic mock data for each entity.
+                Create 5-10 records per entity.
+                Ensure foreign keys match between related entities.
+                Use realistic values for dates and enums.
                     Format as JSON with entity names as keys and record arrays as values.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {"role": "user", "content": str(entities)}
+            },
+            {"role": "user", "content": str(entities)}
             ]
         )
         
@@ -340,19 +340,19 @@ async def detect_edit_intent(user_input: str) -> str:
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """Analyze the edit request and extract:
-                    - edit_target: page, component, data, field, or style
-                    - target_page: which page to modify
-                    - target_component: which component to modify
-                    - operation: add, remove, or update
-                    - modification_details: structured description of changes
+        messages=[
+            {
+                "role": "system",
+                "content": """Analyze the edit request and extract:
+                - edit_target: page, component, data, field, or style
+                - target_page: which page to modify
+                - target_component: which component to modify
+                - operation: add, remove, or update
+                - modification_details: structured description of changes
                     Format as JSON with these fields.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {"role": "user", "content": user_input}
+            },
+            {"role": "user", "content": user_input}
             ]
         )
         
@@ -389,22 +389,22 @@ async def apply_edit_patch(
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """Apply the requested changes to the configuration.
-                    Preserve existing structure and only modify what's needed.
+        messages=[
+            {
+                "role": "system",
+                "content": """Apply the requested changes to the configuration.
+                Preserve existing structure and only modify what's needed.
                     Return the complete updated configuration as JSON.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {
-                    "role": "user",
-                    "content": f"""
-                    Current config: {current_config}
-                    Edit target: {edit_target}
-                    Modifications: {modification_details}
-                    """
-                }
+            },
+            {
+                "role": "user",
+                "content": f"""
+                Current config: {current_config}
+                Edit target: {edit_target}
+                Modifications: {modification_details}
+                """
+            }
             ]
         )
         
@@ -429,23 +429,23 @@ async def regenerate_mock_data(
     try:
         response = await openai.ChatCompletion.acreate(
             model="gpt-4o-mini",  # Using gpt-4o-mini
-            messages=[
-                {
-                    "role": "system",
-                    "content": """Update mock data to match schema changes.
-                    Preserve existing records where possible.
-                    Add new fields or records as needed.
+        messages=[
+            {
+                "role": "system",
+                "content": """Update mock data to match schema changes.
+                Preserve existing records where possible.
+                Add new fields or records as needed.
                     Return complete updated mock data as JSON.
                     Only return a valid JSON object without any additional text or explanation."""
-                },
-                {
-                    "role": "user",
-                    "content": f"""
-                    Updated config: {updated_config}
-                    Current mock data: {current_mock_data}
-                    Modifications: {modification_details}
-                    """
-                }
+            },
+            {
+                "role": "user",
+                "content": f"""
+                Updated config: {updated_config}
+                Current mock data: {current_mock_data}
+                Modifications: {modification_details}
+                """
+            }
             ]
         )
         
